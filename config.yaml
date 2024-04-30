@@ -1,0 +1,487 @@
+define: &borders '#c05163' # works only for windows 11; (here is pink color)
+
+define: &frame_main '#5b356f' # frame color under constant lables (CPU, sound icon, etc.)
+define: &frame_secondary '#ff637d' # frame color under changing lables (cpu %, sound %, time, etc.)
+define: &lable_main '#ff637d' # Constant lables (CPU, sound icont)
+define: &lable_secondary '#5b356f' # Dynamic lables (time, split direction)
+
+#padding between styled (with fancy nerd font characters around them) components
+define: &component_right_padding "0 4 0 0" 
+define: &component_left_padding "0 0 0 4"
+define: &component_margin "2 0 2 0" #shrinks background to be in line with characters
+
+define: &font "CaskaydiaMono Nerd Font" #use nerd font for icons to display correctly
+define: &font_alternate "CaskaydiaMono Nerd Font" # use this varriable to change to another font instead of hardording it everywhere
+define: &font_weight_bold "950" #maximum weight; for titles
+define: &font_weight "600" #for dinamic values
+
+
+#I used icons, but you may use text as well
+#if you wanna change this, change line with mode binding as well
+define: &lock_mode ''
+define: &resize_mode ''
+
+#I defined some styling components here
+define: &arrow_in_component
+  text: ""
+  foreground: *frame_secondary
+  background: *frame_main
+  margin: *component_margin
+
+define: &invert_arrow_in_component
+  text: ""
+  background: *frame_secondary
+  foreground: *frame_main
+  margin: *component_margin
+
+define: &halfcyrcle
+  text: ""
+  foreground: *frame_main
+  padding: *component_left_padding
+
+define: &invert_halfcyrcle
+  text: ""
+  foreground: *frame_secondary
+  padding: *component_right_padding
+
+define: &triangle
+  text: ""
+  foreground: *frame_main
+  padding: *component_left_padding
+
+define: &invert_triangle
+  text: ""
+  foreground: *frame_main
+  padding: *component_right_padding
+
+define: &triangle_in_component
+  text: ""
+  foreground: *frame_main
+  background: *frame_secondary
+  margin: *component_margin
+
+define: &invert_triangle_in_component
+  text: ""
+  foreground: *frame_main
+  background: *frame_secondary
+  margin: *component_margin
+
+general:
+  # Whether to automatically focus windows underneath the cursor.
+  focus_follows_cursor: false
+
+  # Whether to jump the cursor between windows focused by the WM.
+  cursor_follows_focus: false
+
+  # Whether to switch back and forth between the previously focused workspace
+  # when focusing the current workspace.
+  toggle_workspace_on_refocus: true
+
+  # Whether to show floating windows as always on top.
+  show_floating_on_top: false
+
+  # Amount to move floating windows by (eg. when using `alt+<HJKL>` on a floating window)
+  floating_window_move_amount: "5%"
+
+  # Whether to center new floating windows.
+  center_new_floating_windows: true
+
+  # *Strongly* recommended to set to 'false'. Whether to globally enable/disable
+  # window transition animations (on minimize, close, etc). Set to 'unchanged'
+  # to make no setting changes.
+  window_animations: false
+
+gaps:
+  # Gap between adjacent windows.
+  inner_gap: "15px"
+
+  # Gap between windows and the screen edge.
+  outer_gap: "15px"
+
+# Highlight active/inactive windows with a colored border.
+# ** Exclusive to Windows 11 due to API limitations.
+focus_borders:
+  active:
+    enabled: true
+    color: *borders
+
+  inactive:
+    enabled: false
+    color: "#ff0000"
+
+bar:
+  height: "30px"
+  position: "top"
+  opacity: 1.0
+  background: "#20242cc4"
+  foreground: "#ffffff"
+  font_family: *font
+  font_size: "15px"
+  padding: "4px 6px"
+  offset_x: "0"
+  offset_y: "0"
+  border_radius: "0"
+  components_left:
+    - type: "workspaces"
+      focused_workspace_background: *frame_main
+      focused_workspace_foreground: *lable_main
+      focused_workspace_border_color: *frame_secondary
+      focused_workspace_border_width: 1
+
+      # "displayed" thing doesn't work
+      # displayed_workspace_background: *frame_secondary
+      # displayed_workspace_foreground: *frame_secondary
+      # displayed_workspace_border_color: *frame_main
+      # displayed_workspace_border_width: 1
+      
+      default_workspace_background: "transparent"
+      default_workspace_foreground: *lable_main
+      # default_workspace_border_color: #
+      # default_workspace_border_width: #
+
+      # workspace styled component
+    - type: "text"
+      <<: *triangle
+    - type: "text"
+      text: ""
+      foreground: *lable_main
+      background: *frame_main
+      margin: *component_margin
+      padding: "0 8 0 2"
+    - type: "text"
+      <<: *invert_triangle_in_component
+    - type: "window title"
+      foreground: *lable_secondary
+      background: *frame_secondary
+      margin: *component_margin
+    - type: "text"
+      <<: *invert_triangle
+      foreground: *frame_secondary
+
+  components_center:
+    - type: "text"
+      <<: *triangle
+    - type: "text"
+      <<: *invert_triangle_in_component
+      margin: "0"
+    - type: "clock"
+      time_formatting: "HH:mm   MMM d"
+      background: *frame_secondary
+      foreground: *lable_secondary
+      font_weight: *font_weight
+    - type: "text"
+      <<: *triangle_in_component
+      margin: "0"
+    - type: "text"
+      <<: *invert_triangle
+
+  components_right:
+    - type: "text"
+      <<: *halfcyrcle
+    - type: "text"
+      text: "CPU"
+      foreground: *lable_main
+      background: *frame_main
+      font_weight: *font_weight_bold
+      margin: *component_margin
+    - type: "text"
+      <<: *invert_arrow_in_component
+    - type: "cpu"
+      label: "{percent_usage}%"
+      refresh_interval_ms: 1000
+      margin: *component_margin
+      background: *frame_secondary
+      foreground: *lable_secondary
+      font_weight: *font_weight
+    - type: "text"
+      <<: *arrow_in_component
+
+    - type: "text"
+      text: "GPU"
+      foreground: *lable_main
+      background: *frame_main
+      font_weight: *font_weight_bold
+      margin: *component_margin
+    - type: "text"
+      <<: *invert_arrow_in_component
+    - type: "gpu"
+      label: "{percent_usage}%"
+      refresh_interval_ms: 1000 
+      margin: *component_margin
+      background: *frame_secondary
+      foreground: *lable_secondary
+      font_weight: *font_weight
+    - type: "text"
+      <<: *arrow_in_component
+
+    - type: "text"
+      text: "RAM"
+      foreground: *lable_main
+      background: *frame_main
+      margin: *component_margin
+      font_weight: *font_weight_bold
+    - type: "text"
+      <<: *invert_arrow_in_component
+    - type: "memory"
+      label: "{percent_usage}%"
+      refresh_interval_ms: 1000
+      margin: *component_margin
+      background: *frame_secondary
+      foreground: *lable_secondary
+      font_weight: *font_weight
+    - type: "text"
+      <<: *invert_halfcyrcle
+
+    - type: "text"
+      <<: *halfcyrcle
+    - type: "text"
+      text: "🔊"
+      foreground: *lable_main
+      background: *frame_main
+      margin: *component_margin
+      font_weight: "400"
+    - type: "text"
+      <<: *invert_arrow_in_component
+    - type: "volume"
+      label_low: "{volume_level}%"
+      label_medium: "{volume_level}%"
+      label_high: "{volume_level}%"
+      label_mute: "{volume_level}%"
+      margin: *component_margin
+      foreground: *lable_secondary
+      background: *frame_secondary
+      font_weight: *font_weight
+    - type: "text"
+      <<: *invert_halfcyrcle
+
+    - type: "text"
+      <<: *halfcyrcle
+    - type: "text"
+      text: "󰞁"
+      foreground: *lable_main
+      background: *frame_main
+      font_weight: *font_weight_bold
+      margin: *component_margin
+      padding: "0 2 0 0"
+    - type: "text"
+      <<: *invert_arrow_in_component
+    - type: "tiling direction"
+      label_horizontal: "⮂"
+      label_vertical: "⮁"
+      background: *frame_secondary
+      foreground: *lable_secondary
+      margin: *component_margin
+    - type: "text"
+      <<: *invert_halfcyrcle
+
+    - type: "text"
+      <<: *halfcyrcle
+    - type: "text"
+      text: ""
+      foreground: *lable_main
+      background: *frame_main
+      font_weight: *font_weight_bold
+      margin: *component_margin
+      padding: "0 2 0 0"
+    - type: "text"
+      <<: *invert_arrow_in_component
+    - type: "binding mode"
+      background: *frame_secondary
+      foreground: *lable_secondary
+      margin: *component_margin
+      padding: "0 6 0 6"
+    - type: "text"
+      <<: *invert_halfcyrcle
+
+workspaces:
+  - name: "1"
+  - name: "2"
+  - name: "3"
+  - name: "4"
+  - name: "5"
+  - name: "6"
+  - name: "7"
+  - name: "8"
+  - name: "9"
+
+window_rules:
+  # Task Manager requires admin privileges to manage and should be ignored unless running
+  # the WM as admin.
+  - command: "ignore"
+    match_process_name: "/Taskmgr|ScreenClippingHost/"
+
+  # Launches system dialogs as floating by default (eg. File Explorer save/open dialog).
+  - command: "set floating"
+    match_class_name: "#32770"
+
+  # Do not manage picture-in-picture windows for browsers. Note that the default is for
+  # English; change `match_title` to the window's title if you use another language.
+  - command: "ignore"
+    match_title: "[Pp]icture.in.[Pp]icture"
+    match_class_name: "Chrome_WidgetWin_1|MozillaDialogClass|Brave"
+
+  # Some applications (eg. Steam) have borders that extend past the normal border size.
+  - command: "resize borders 0px -7px -7px -7px"
+    match_process_name: "steam"
+
+  - command: "move to workspace 1"
+    match_process_name: "Zoom"
+
+  - command: "move to workspace 2"
+    match_process_name: "Telegram|Discord|LinkedIn"
+
+binding_modes:
+  - name: *resize_mode
+    keybindings:
+      # Resize focused window by a percentage or pixel amount.
+      - command: "resize width -2%"
+        bindings: ["H", "Left"]
+      - command: "resize width +2%"
+        bindings: ["L", "Right"]
+      - command: "resize height +2%"
+        bindings: ["K", "Up"]
+      - command: "resize height -2%"
+        bindings: ["J", "Down"]
+      # Press enter/escape to return to default keybindings.
+      - command: "binding mode none"
+        bindings: ["Escape", "Enter", "Alt+S", "RMenu+Control+S"]
+  - name: *lock_mode
+    keybindings:
+      - command: "binding mode none"
+        bindings: ["Escape", "Enter", "Alt+G", "RMenu+Control+G"]
+keybindings:
+  # Shift focus in a given direction.
+  - command: "focus left"
+    bindings: ["Alt+H", "RMenu+Control+H"]
+  - command: "focus right"
+    bindings: ["Alt+L", "RMenu+Control+L"]
+  - command: "focus up"
+    bindings: ["Alt+K", "RMenu+Control+K"]
+  - command: "focus down"
+    bindings: ["Alt+J", "RMenu+Control+J"]
+
+  # Move focused window in a given direction.
+  - command: "move left"
+    bindings: ["Alt+Shift+H", "Alt+Shift+Left", "RMenu+Control+Shift+Left"]
+  - command: "move right"
+    bindings: ["Alt+Shift+L", "Alt+Shift+Right", "RMenu+Control+Shift+Right"]
+  - command: "move up"
+    bindings: ["Alt+Shift+K", "Alt+Shift+Up", "RMenu+Control+Shift+Up"]
+  - command: "move down"
+    bindings: ["Alt+Shift+J", "Alt+Shift+Down", "RMenu+Control+Shift+Down"]
+
+  # Resize focused window by a percentage or pixel amount.
+  - command: "resize width -2%"
+    bindings: ["Alt+U", "RMenu+Control+U"]
+  - command: "resize width +2%"
+    bindings: ["Alt+P", "RMenu+Control+P"]
+  - command: "resize height +2%"
+    bindings: ["Alt+O", "RMenu+Control+O"]
+  - command: "resize height -2%"
+    bindings: ["Alt+I", "RMenu+Control+I"]
+
+  # As an alternative to the resize keybindings above, resize mode enables resizing via
+  # HJKL or arrow keys. The binding mode is defined above with the name "resize".
+  - command: "binding mode "
+    bindings: ["Alt+S", "RMenu+Control+S"]
+
+  # mode where no keybinding are working
+  - command: "binding mode "
+    bindings: ["Alt+G", "RMenu+Control+G"]
+
+  # Change tiling direction. This determines where new tiling windows will be inserted.
+  - command: "tiling direction toggle"
+    bindings: ["Alt+V", "RMenu+Control+V"]
+
+  # Change focus between floating / tiling windows.
+  - command: "focus mode toggle"
+    bindings: ["Alt+Space", "RMenu+Control+Space"]
+
+  # Change the focused window to be floating / tiling.
+  - command: "toggle floating"
+    bindings: ["Alt+Shift+Space", "RMenu+Control+Shift+Space"]
+
+  # Change the focused window to be maximized / unmaximized.
+  - command: "toggle maximized"
+    bindings: ["Alt+Enter", "RMenu+Control+Enter"]
+
+  # Minimize focused window.
+  - command: "set minimized"
+    bindings: ["Alt+M", "RMenu+Control+M"]
+
+  # Close focused window.
+  - command: "close"
+    bindings: ["Alt+Q", "RMenu+Control+Q"]
+
+  # Kill GlazeWM process safely.
+  - command: "exit wm"
+    bindings: ["Alt+Shift+Q", "RMenu+Control+Shift+Q"]
+
+  # Re-evaluate configuration file.
+  - command: "reload config"
+    bindings: ["Alt+Shift+R", "RMenu+Control+Shift+R"]
+
+  # Launch CMD terminal (alternatively `exec wt` or `exec %ProgramFiles%/Git/git-bash.exe`
+  # to start Windows Terminal and Git Bash respectively.
+  - command: "exec ubuntu"
+    bindings: ["Alt+T", "RMenu+Control+T"]
+
+  # Focus the workspace that last had focus.
+  - command: "focus workspace recent"
+    bindings: ["Alt+Y", "RMenu+Control+Y"]
+
+  # Focus the next/previous workspace defined in `workspaces` config.
+  - command: "focus workspace next"
+    bindings: ["Alt+OemCloseBrackets", "RMenu+Control+OemCloseBrackets"]
+  - command: "focus workspace prev"
+    bindings: ["Alt+OemOpenBrackets", "RMenu+Control+Shift+OemOpenBrackets"]
+
+  # Change focus to a workspace defined in `workspaces` config.
+  - command: "focus workspace 1"
+    bindings: ["Alt+1", "RMenu+Control+1"]
+  - command: "focus workspace 2"
+    bindings: ["Alt+2", "RMenu+Control+2"]
+  - command: "focus workspace 3"
+    bindings: ["Alt+3", "RMenu+Control+3"]
+  - command: "focus workspace 4"
+    bindings: ["Alt+4", "RMenu+Control+4"]
+  - command: "focus workspace 5"
+    bindings: ["Alt+5", "RMenu+Control+5"]
+  - command: "focus workspace 6"
+    bindings: ["Alt+6", "RMenu+Control+6"]
+  - command: "focus workspace 7"
+    bindings: ["Alt+7", "RMenu+Control+7"]
+  - command: "focus workspace 8"
+    bindings: ["Alt+8", "RMenu+Control+8"]
+  - command: "focus workspace 9"
+    bindings: ["Alt+9", "RMenu+Control+9"]
+
+  # Move focused workspace to a monitor in a given direction.
+  # - command: "move workspace left"
+  #   bindings: ["Alt+A", "RMenu+Control+A"]
+  # - command: "move workspace right"
+  #   bindings: ["Alt+F", "RMenu+Control+F"]
+  # - command: "move workspace up"
+  #   bindings: ["Alt+D", "RMenu+Control+D"]
+  # - command: "move workspace down"
+  #   bindings: ["Alt+S", "RMenu+Control+S"]
+
+  # Move focused window to a workspace defined in `workspaces` config.
+  - commands: ["move to workspace 1", "focus workspace 1"]
+    bindings: ["Alt+Shift+1", "RMenu+Control+Shift+1"]
+  - commands: ["move to workspace 2", "focus workspace 2"]
+    bindings: ["Alt+Shift+2", "RMenu+Control+Shift+2"]
+  - commands: ["move to workspace 3", "focus workspace 3"]
+    bindings: ["Alt+Shift+3", "RMenu+Control+Shift+3"]
+  - commands: ["move to workspace 4", "focus workspace 4"]
+    bindings: ["Alt+Shift+4", "RMenu+Control+Shift+4"]
+  - commands: ["move to workspace 5", "focus workspace 5"]
+    bindings: ["Alt+Shift+5", "RMenu+Control+Shift+5"]
+  - commands: ["move to workspace 6", "focus workspace 6"]
+    bindings: ["Alt+Shift+6", "RMenu+Control+Shift+6"]
+  - commands: ["move to workspace 7", "focus workspace 7"]
+    bindings: ["Alt+Shift+7", "RMenu+Control+Shift+7"]
+  - commands: ["move to workspace 8", "focus workspace 8"]
+    bindings: ["Alt+Shift+8", "RMenu+Control+Shift+8"]
+  - commands: ["move to workspace 9", "focus workspace 9"]
+    bindings: ["Alt+Shift+9", "RMenu+Control+Shift+9"]
