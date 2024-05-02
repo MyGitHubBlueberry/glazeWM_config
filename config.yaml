@@ -1,27 +1,38 @@
 define: &borders '#c05163' # works only for windows 11; (here is pink color)
 
-define: &frame_main '#5b356f' # frame color under constant lables (CPU, sound icon, etc.)
-define: &frame_secondary '#ff637d' # frame color under changing lables (cpu %, sound %, time, etc.)
-define: &lable_main '#ff637d' # Constant lables (CPU, sound icont)
-define: &lable_secondary '#5b356f' # Dynamic lables (time, split direction)
+# NOTE frame_main not used right now, change 'component'_back to frame_main for it to use default
+define: &frame_main '#f5e0dc' # frame color under constant labels (CPU, sound icon, etc.)
+define: &frame_secondary '#302d41' # frame color under changing labels (cpu %, sound %, time, etc.)
+define: &label_main '#333333' # Constant labels (CPU, sound icont)
+define: &label_secondary '#d9e0ee' # Dynamic labels (time, split direction)
 
-#padding between styled (with fancy nerd font characters around them) components
+# components' background
+define: &workspace_back '#f5e0dc'
+define: &windows_title_back '#c9cbff'
+define: &clock_back '#f5e0dc'
+define: &cpu_back '#ee999f'
+define: &gpu_back '#c69ff5'
+define: &ram_back '#8aadf3'
+define: &volume_back '#ddb6f2'
+define: &direction_back '#f5e0dc'
+define: &mode_back '#8bd5ca'
+
+#padding between styled components
 define: &component_right_padding "0 4 0 0" 
 define: &component_left_padding "0 0 0 4"
 define: &component_margin "2 0 2 0" #shrinks background to be in line with characters
 
-define: &font "CaskaydiaMono Nerd Font" #use nerd font for icons to display correctly
-define: &font_alternate "CaskaydiaMono Nerd Font" # use this varriable to change to another font instead of hardording it everywhere
+define: &font_main "CaskaydiaMono Nerd Font" # use nerd font for icons to display correctly
+define: &font_secondary "CaskaydiaMono Nerd Font" # change this if you want secondary text to look different
 define: &font_weight_bold "950" #maximum weight; for titles
-define: &font_weight "600" #for dinamic values
-
+define: &font_weight "400" #for dinamic values
 
 #I used icons, but you may use text as well
-#if you wanna change this, change line with mode binding as well
+#if you wanna change these, change lines with mode binding as well
 define: &lock_mode ''
 define: &resize_mode ''
 
-#I defined some styling components here
+#I defined some styling component parts here
 define: &arrow_in_component
   text: ""
   foreground: *frame_secondary
@@ -115,7 +126,7 @@ bar:
   opacity: 1.0
   background: "#20242cc4"
   foreground: "#ffffff"
-  font_family: *font
+  font_family: *font_main
   font_size: "15px"
   padding: "4px 6px"
   offset_x: "0"
@@ -123,8 +134,8 @@ bar:
   border_radius: "0"
   components_left:
     - type: "workspaces"
-      focused_workspace_background: *frame_main
-      focused_workspace_foreground: *lable_main
+      focused_workspace_background: *workspace_back
+      focused_workspace_foreground: *label_main
       focused_workspace_border_color: *frame_secondary
       focused_workspace_border_width: 1
 
@@ -135,25 +146,28 @@ bar:
       # displayed_workspace_border_width: 1
       
       default_workspace_background: "transparent"
-      default_workspace_foreground: *lable_main
+      default_workspace_foreground: *label_secondary
       # default_workspace_border_color: #
       # default_workspace_border_width: #
 
-      # workspace styled component
     - type: "text"
       <<: *triangle
+      foreground: *windows_title_back
+
     - type: "text"
       text: ""
-      foreground: *lable_main
-      background: *frame_main
+      foreground: *label_main
+      background: *windows_title_back
       margin: *component_margin
       padding: "0 8 0 2"
     - type: "text"
       <<: *invert_triangle_in_component
+      foreground: *windows_title_back
     - type: "window title"
-      foreground: *lable_secondary
+      foreground: *label_secondary
       background: *frame_secondary
       margin: *component_margin
+      font_family: *font_secondary
     - type: "text"
       <<: *invert_triangle
       foreground: *frame_secondary
@@ -161,133 +175,154 @@ bar:
   components_center:
     - type: "text"
       <<: *triangle
+      foreground: *clock_back
     - type: "text"
       <<: *invert_triangle_in_component
+      foreground: *clock_back
       margin: "0"
     - type: "clock"
       time_formatting: "HH:mm   MMM d"
+      font_family: *font_secondary
       background: *frame_secondary
-      foreground: *lable_secondary
+      foreground: *label_secondary
       font_weight: *font_weight
     - type: "text"
       <<: *triangle_in_component
+      foreground: *clock_back
       margin: "0"
     - type: "text"
       <<: *invert_triangle
+      foreground: *clock_back
 
   components_right:
     - type: "text"
       <<: *halfcyrcle
+      foreground: *cpu_back
     - type: "text"
       text: "CPU"
-      foreground: *lable_main
-      background: *frame_main
+      foreground: *label_main
+      background: *cpu_back
       font_weight: *font_weight_bold
       margin: *component_margin
     - type: "text"
       <<: *invert_arrow_in_component
+      foreground: *cpu_back
     - type: "cpu"
       label: "{percent_usage}%"
       refresh_interval_ms: 1000
       margin: *component_margin
       background: *frame_secondary
-      foreground: *lable_secondary
+      foreground: *label_secondary
       font_weight: *font_weight
+      font_family: *font_secondary
     - type: "text"
       <<: *arrow_in_component
+      background: *gpu_back
 
     - type: "text"
       text: "GPU"
-      foreground: *lable_main
-      background: *frame_main
+      foreground: *label_main
+      background: *gpu_back
       font_weight: *font_weight_bold
       margin: *component_margin
     - type: "text"
       <<: *invert_arrow_in_component
+      foreground: *gpu_back
     - type: "gpu"
       label: "{percent_usage}%"
       refresh_interval_ms: 1000 
       margin: *component_margin
       background: *frame_secondary
-      foreground: *lable_secondary
+      foreground: *label_secondary
       font_weight: *font_weight
+      font_family: *font_secondary
     - type: "text"
       <<: *arrow_in_component
+      background: *ram_back
 
     - type: "text"
       text: "RAM"
-      foreground: *lable_main
-      background: *frame_main
+      foreground: *label_main
+      background: *ram_back
       margin: *component_margin
       font_weight: *font_weight_bold
     - type: "text"
       <<: *invert_arrow_in_component
+      foreground: *ram_back
     - type: "memory"
       label: "{percent_usage}%"
       refresh_interval_ms: 1000
       margin: *component_margin
       background: *frame_secondary
-      foreground: *lable_secondary
+      foreground: *label_secondary
       font_weight: *font_weight
+      font_family: *font_secondary
     - type: "text"
       <<: *invert_halfcyrcle
 
     - type: "text"
       <<: *halfcyrcle
+      foreground: *volume_back
     - type: "text"
       text: "🔊"
-      foreground: *lable_main
-      background: *frame_main
+      foreground: *label_main
+      background: *volume_back
       margin: *component_margin
       font_weight: "400"
     - type: "text"
       <<: *invert_arrow_in_component
+      foreground: *volume_back
     - type: "volume"
       label_low: "{volume_level}%"
       label_medium: "{volume_level}%"
       label_high: "{volume_level}%"
       label_mute: "{volume_level}%"
       margin: *component_margin
-      foreground: *lable_secondary
+      foreground: *label_secondary
       background: *frame_secondary
       font_weight: *font_weight
+      font_family: *font_secondary
     - type: "text"
       <<: *invert_halfcyrcle
 
     - type: "text"
       <<: *halfcyrcle
+      foreground: *direction_back
     - type: "text"
       text: "󰞁"
-      foreground: *lable_main
-      background: *frame_main
+      foreground: *label_main
+      background: *direction_back
       font_weight: *font_weight_bold
       margin: *component_margin
       padding: "0 2 0 0"
     - type: "text"
       <<: *invert_arrow_in_component
+      foreground: *direction_back
     - type: "tiling direction"
       label_horizontal: "⮂"
       label_vertical: "⮁"
       background: *frame_secondary
-      foreground: *lable_secondary
+      foreground: *label_secondary
       margin: *component_margin
     - type: "text"
       <<: *invert_halfcyrcle
 
     - type: "text"
       <<: *halfcyrcle
+      foreground: *mode_back
     - type: "text"
       text: ""
-      foreground: *lable_main
-      background: *frame_main
+      foreground: *label_main
+      background: *mode_back
       font_weight: *font_weight_bold
       margin: *component_margin
       padding: "0 2 0 0"
     - type: "text"
       <<: *invert_arrow_in_component
+      foreground: *mode_back
     - type: "binding mode"
       background: *frame_secondary
-      foreground: *lable_secondary
+      foreground: *label_secondary
       margin: *component_margin
       padding: "0 6 0 6"
     - type: "text"
