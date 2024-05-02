@@ -137,7 +137,7 @@ bar:
       focused_workspace_background: *workspace_back
       focused_workspace_foreground: *label_main
       focused_workspace_border_color: *frame_secondary
-      focused_workspace_border_width: 1
+      focused_workspace_border_width: 0
 
       # "displayed" thing doesn't work
       # displayed_workspace_background: *frame_secondary
